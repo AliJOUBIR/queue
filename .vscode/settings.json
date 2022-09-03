@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "queue.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c",
+        "deque": "c",
+        "list": "c",
+        "vector": "c"
+    }
+}
