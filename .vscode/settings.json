@@ -6,6 +6,8 @@
         "string_view": "c",
         "deque": "c",
         "list": "c",
-        "vector": "c"
+        "vector": "c",
+        "ranges": "c",
+        "string.h": "c"
     }
 }

@@ -1,0 +1,62 @@
+---
+:source:
+  :path: test
+  :file: test_queue.c
+:successes:
+- :test: test_queue_InitWithWrongData
+  :line: 29
+  :message: ''
+  :unity_test_time: 0
+- :test: test_queue_InitFrontRearNegativOne
+  :line: 52
+  :message: ''
+  :unity_test_time: 0
+- :test: test_queue_ArrayResetAfterInit
+  :line: 58
+  :message: ''
+  :unity_test_time: 0
+- :test: test_queue_IsEmptyAfterInit
+  :line: 69
+  :message: ''
+  :unity_test_time: 0
+- :test: test_queue_EnqueueReturnSuccessOperation
+  :line: 76
+  :message: ''
+  :unity_test_time: 0
+- :test: test_queue_DequeueReturnEmpty
+  :line: 83
+  :message: ''
+  :unity_test_time: 0
+- :test: test_queue_EnqueueOnce
+  :line: 90
+  :message: ''
+  :unity_test_time: 0
+- :test: test_queue_IsFullAfterDequeue
+  :line: 99
+  :message: ''
+  :unity_test_time: 0
+- :test: test_queue_DequeueReturnSuccess
+  :line: 111
+  :message: ''
+  :unity_test_time: 0
+- :test: test_queue_EnqueueDequeueValue
+  :line: 120
+  :message: ''
+  :unity_test_time: 0
+- :test: test_queue_EnqueueUntilFullDequeueAllValue
+  :line: 142
+  :message: ''
+  :unity_test_time: 0
+- :test: test_queue_Circular
+  :line: 162
+  :message: ''
+  :unity_test_time: 0
+:failures: []
+:ignores: []
+:counts:
+  :total: 12
+  :passed: 12
+  :failed: 0
+  :ignored: 0
+:stdout: []
+:time: 0.039067799982149154
