@@ -70,10 +70,15 @@
 # For more information on these options, see docs in plugins/gcov
 :gcov:
   :reports:
-    - HtmlDetailed
+    - HtmlBasic
+  :html_report_type:  
+    - detailed
   :gcovr:
     :html_medium_threshold: 75
     :html_high_threshold: 90
+  :utilities:
+    - gcovr           # Use gcovr to create the specified reports (default).
+    - ReportGenerator # Use ReportGenerator to create the specified reports.
 
 #:tools:
 # Ceedling defaults to using gcc for compiling, linking, etc.
@@ -89,7 +94,7 @@
   :flag: "-l${1}"
   :path_flag: "-L ${1}"
   :system: []    # for example, you might list 'm' to grab the math library
-  :test: []
+  :test: [] 
   :release: []
 
 :plugins:
@@ -98,4 +103,6 @@
   :enabled:
     - stdout_pretty_tests_report
     - module_generator
+    - gcov # <--- this line has been addeds   
+    - stdout_gtestlike_tests_report
 ...

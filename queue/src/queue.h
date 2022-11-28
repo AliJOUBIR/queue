@@ -11,7 +11,8 @@
 typedef enum {
     QUEUE_SUCCESS,
     QUEUE_EMPTY,
-    QUEUE_FULL
+    QUEUE_FULL,
+    QUEUE_ERROR
 }queue_error_t;
 
 typedef struct
@@ -23,7 +24,7 @@ typedef struct
     int32_t rear;
 }queue_t;
 
-void queue_init(queue_t * const q);
+queue_error_t queue_init(queue_t * const q);
 
 queue_error_t queue_get_state(queue_t * const q);
 

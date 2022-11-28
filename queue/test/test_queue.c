@@ -1,4 +1,3 @@
-#define TEST
 #ifdef TEST
 
 #include "unity.h"
@@ -6,13 +5,16 @@
 #include "queue.h"
 
 #define DATA_SIZE (100)
-    uint32_t data[DATA_SIZE];
-    queue_t test_q =
-    {
-        .data_p = data,
-        .data_size = sizeof(uint32_t),
-        .queue_size = DATA_SIZE
-    };
+
+#define DATA_TYPE uint16_t
+#define DATA_TYPE_SIZE sizeof(DATA_TYPE)
+DATA_TYPE data[DATA_SIZE];
+queue_t test_q =
+{
+    .data_p = data,
+    .data_size = DATA_TYPE_SIZE,
+    .queue_size = DATA_SIZE
+};
 
 void setUp(void)
 {
@@ -24,22 +26,44 @@ void tearDown(void)
     queue_init(&test_q);
 }
 
+void test_queue_InitWithWrongData(void)
+{
+    queue_t test_q_null =
+    {
+        .data_p = NULL,
+        .data_size = DATA_TYPE_SIZE,
+        .queue_size = DATA_SIZE
+    };
+    TEST_ASSERT_EQUAL(QUEUE_ERROR,queue_init(&test_q_null));
+
+    test_q_null.data_size = 0;
+    TEST_ASSERT_EQUAL(QUEUE_ERROR,queue_init(&test_q_null));
+
+    test_q_null.data_size = -213;
+    TEST_ASSERT_EQUAL(QUEUE_ERROR,queue_init(&test_q_null));
+
+    test_q_null.queue_size = 0;
+    TEST_ASSERT_EQUAL(QUEUE_ERROR,queue_init(&test_q_null));
+
+    test_q_null.queue_size = -487;
+    TEST_ASSERT_EQUAL(QUEUE_ERROR,queue_init(&test_q_null));
+}
+
 void test_queue_InitFrontRearNegativOne(void)
 {
-    
     TEST_ASSERT_EQUAL_INT32(-1,test_q.front);
     TEST_ASSERT_EQUAL_INT32(-1,test_q.rear); 
 }
 
 void test_queue_ArrayResetAfterInit(void)
 {
-    uint32_t data_buffer;
+    DATA_TYPE data_buffer;
     for (uint32_t i = 0; i < DATA_SIZE ; i++)
     {
-        data_buffer = *((uint32_t*)test_q.data_p+i);
+        data_buffer = *((DATA_TYPE*)test_q.data_p+i);
         TEST_ASSERT_EQUAL_HEX32(0, data_buffer);
     }
-    TEST_ASSERT_EQUAL(test_q.data_size, sizeof(uint32_t));
+    TEST_ASSERT_EQUAL(test_q.data_size, DATA_TYPE_SIZE);
 }
 
 void test_queue_IsEmptyAfterInit(void)
@@ -51,21 +75,21 @@ void test_queue_IsEmptyAfterInit(void)
 
 void test_queue_EnqueueReturnSuccessOperation(void) 
 {
-    uint32_t d = 13;
+    DATA_TYPE d = 13;
     TEST_ASSERT_EQUAL(QUEUE_SUCCESS,queue_enqueue(&test_q,&d));
     
 }
 
 void test_queue_DequeueReturnEmpty(void) 
 {
-    uint32_t d;
+    DATA_TYPE d;
     TEST_ASSERT_EQUAL(QUEUE_EMPTY,queue_dequeue(&test_q,&d));
     
 }
 
 void test_queue_EnqueueOnce(void) 
 {
-    uint32_t en = 0xdead;
+    DATA_TYPE en = 0xdead;
     TEST_ASSERT_EQUAL(QUEUE_SUCCESS,queue_enqueue(&test_q,&en));
     TEST_ASSERT_EQUAL(0,test_q.front);
     TEST_ASSERT_EQUAL(0,test_q.rear);
@@ -74,7 +98,7 @@ void test_queue_EnqueueOnce(void)
 
 void test_queue_IsFullAfterDequeue(void) 
 {
-    uint32_t en = 0xdead;
+    DATA_TYPE en = 0xdead;
     for (uint32_t i = 0; i < DATA_SIZE ; i++)
     {
         TEST_ASSERT_EQUAL(QUEUE_SUCCESS,queue_enqueue(&test_q,&en));
@@ -86,8 +110,8 @@ void test_queue_IsFullAfterDequeue(void)
 
 void test_queue_DequeueReturnSuccess(void)
 {
-    uint32_t de ;
-    uint32_t en = 0xdead;
+    DATA_TYPE de ;
+    DATA_TYPE en = 0xdead;
     TEST_ASSERT_EQUAL(QUEUE_SUCCESS,queue_enqueue(&test_q,&en));
     TEST_ASSERT_EQUAL(QUEUE_SUCCESS,queue_dequeue(&test_q,&de));
     TEST_ASSERT_EQUAL(QUEUE_EMPTY,queue_dequeue(&test_q,&de));
@@ -95,9 +119,9 @@ void test_queue_DequeueReturnSuccess(void)
 
 void test_queue_EnqueueDequeueValue(void)
 {
-    uint32_t de = 0;
-    uint32_t en = 0;
-    uint32_t databuff;
+    DATA_TYPE de = 0;
+    DATA_TYPE en = 0;
+    DATA_TYPE databuff;
 
     en = 0x1234;
     TEST_ASSERT_EQUAL(QUEUE_SUCCESS,queue_enqueue(&test_q,&en));
@@ -106,10 +130,10 @@ void test_queue_EnqueueDequeueValue(void)
     TEST_ASSERT_EQUAL(QUEUE_SUCCESS,queue_enqueue(&test_q,&en));
 
     TEST_ASSERT_EQUAL(QUEUE_SUCCESS,queue_dequeue(&test_q,&de)); 
-    TEST_ASSERT_EQUAL_HEX(0x1234,de);
+    TEST_ASSERT_EQUAL_HEX((DATA_TYPE)0x1234,de);
     
     TEST_ASSERT_EQUAL(QUEUE_SUCCESS,queue_dequeue(&test_q,&de));
-    TEST_ASSERT_EQUAL_HEX(0xb00b,de);
+    TEST_ASSERT_EQUAL_HEX((DATA_TYPE)0xb00b,de);
     
 }
 
@@ -117,9 +141,9 @@ void test_queue_EnqueueDequeueValue(void)
 
 void test_queue_EnqueueUntilFullDequeueAllValue(void)
 {
-    uint32_t de ;
-    uint32_t en_base = 0xdeadbeef;
-    uint32_t en = en_base;
+    DATA_TYPE de ;
+    DATA_TYPE en_base = (DATA_TYPE)0xdeadbeef;
+    DATA_TYPE en = en_base;
     while (queue_enqueue(&test_q,&en) == QUEUE_SUCCESS)
     {
         en++;
@@ -137,9 +161,9 @@ void test_queue_EnqueueUntilFullDequeueAllValue(void)
 
 void test_queue_Circular(void)
 {
-    uint32_t de ;
-    uint32_t en_base = 0xdeadbeef;
-    uint32_t en = en_base;
+    DATA_TYPE de ;
+    DATA_TYPE en_base = (DATA_TYPE)0xdeadbeef;
+    DATA_TYPE en = en_base;
     while (queue_enqueue(&test_q,&en) == QUEUE_SUCCESS);
 
     TEST_ASSERT_EQUAL(QUEUE_SUCCESS,queue_dequeue(&test_q,&de));
